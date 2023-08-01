@@ -17,16 +17,10 @@
                     <h1 class="page-header">
                         Welcome to admin
 
-
-                        <small> <?php
-
-                                if (isset($_SESSION['username'])) {
-
-                                    echo $_SESSION['username'];
-                                }
-
-                                ?></small>
+                        <small> <?php echo $_SESSION['username'] ?></small>
                     </h1>
+
+
                 </div>
             </div>
 
@@ -51,7 +45,6 @@
                                     echo  "<div class='huge'>{$post_count}</div>"
 
                                     ?>
-
 
                                     <div>Posts</div>
                                 </div>
@@ -164,32 +157,6 @@
                 </div>
             </div>
             <!-- /.row -->
-
-
-            <?php
-
-            $query = "SELECT * FROM posts WHERE post_status = 'published' ";
-            $select_all_published_posts = mysqli_query($connection, $query);
-            $post_published_count = mysqli_num_rows($select_all_published_posts);
-
-
-
-            $query = "SELECT * FROM posts WHERE post_status = 'draft' ";
-            $select_all_draft_posts = mysqli_query($connection, $query);
-            $post_draft_count = mysqli_num_rows($select_all_draft_posts);
-
-
-            $query = "SELECT * FROM comments WHERE comment_status = 'unapproved' ";
-            $unapproved_comments_query = mysqli_query($connection, $query);
-            $unapproved_comment_count = mysqli_num_rows($unapproved_comments_query);
-
-
-            $query = "SELECT * FROM users WHERE user_role = 'subscriber'";
-            $select_all_subscribers = mysqli_query($connection, $query);
-            $subscriber_count = mysqli_num_rows($select_all_subscribers);
-
-            ?>
-
             <div class="row">
 
                 <script type="text/javascript">
@@ -204,14 +171,15 @@
 
                             <?php
 
-                            $element_text = ['All Posts', 'Active Posts', 'Draft Posts', 'Comments', 'Pending Comments', 'Users', 'Subscribers', 'Categories'];
-                            $element_count = [$post_count, $post_published_count, $post_draft_count, $comment_count, $unapproved_comment_count, $user_count, $subscriber_count, $category_count];
+                            // $days1 = ['Mon','Tuesday','Wed','Thu','Fri','Sat','Sun'];
+                            $elements = ['Active Posts', 'Categories', 'Users', ' Comments'];
+                            $element_data = [$post_count, $category_count, $user_count, $comment_count];
 
 
-                            for ($i = 0; $i < 8; $i++) {
-
-                                echo "['{$element_text[$i]}'" . "," . "{$element_count[$i]}],";
+                            for ($i = 0; $i < 4; $i++) {
+                                echo   "['{$elements[$i]}'" . "," . "{$element_data[$i]}],";
                             }
+
 
                             ?>
 
@@ -219,8 +187,8 @@
 
                         var options = {
                             chart: {
-                                title: '',
-                                subtitle: '',
+                                title: 'Company Performance',
+                                subtitle: 'Sales, Expenses, and Profit: 2014-2017',
                             }
                         };
 
@@ -231,40 +199,9 @@
                 </script>
 
                 <div id="columnchart_material" style="width: 'auto'; height: 500px;"></div>
-
             </div>
-
         </div>
         <!-- /.container-fluid -->
-
     </div>
-
     <!-- /#page-wrapper -->
-
     <?php include "includes/admin_footer.php" ?>
-
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/css/toastr.min.css" />
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/js/toastr.min.js"></script>
-    <script src="https://js.pusher.com/4.1/pusher.min.js"></script>
-
-    <script>
-        $(document).ready(function() {
-
-            var pusher = new Pusher('a202fba63a209863ab62', {
-
-                cluster: 'us2',
-                encrypted: true
-            });
-
-            var notificationChannel = pusher.subscribe('notifications');
-
-            notificationChannel.bind('new_user', function(notification) {
-
-                var message = notification.message;
-
-                toastr.success(`${message} just registered`);
-
-            });
-
-        });
-    </script>
